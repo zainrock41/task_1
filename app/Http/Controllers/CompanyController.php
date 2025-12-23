@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\DataTables\CompanyDataTable;
 use App\Http\Requests\CompanyRequest;
-use App\Models\Company;
 use App\Repositories\Interfaces\CompanyInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
-use App\Models\Employee;
-use Yajra\DataTables\Facades\DataTables;
 use Throwable;
 
 class CompanyController extends Controller
@@ -38,9 +34,13 @@ class CompanyController extends Controller
      * @param CompanyDataTable $dataTable
      * @return View
      */
-    public function index(CompanyDataTable $dataTable)
+    public function index(CompanyDataTable $dataTable): View
     {
-        return $dataTable->render('companies.index');
+        try {
+            return $dataTable->render('companies.index');
+        } catch (Throwable $exception) {
+            abort(500, 'Unable to load companies list.');
+        }
     }
 
     /**
@@ -50,7 +50,11 @@ class CompanyController extends Controller
      */
     public function create(): View
     {
-        return view('Companies.Create');
+        try {
+            return view('companies.create');
+        } catch (Throwable $exception) {
+            abort(500, 'Unable to load company creation form.');
+        }
     }
 
     /**
@@ -83,9 +87,12 @@ class CompanyController extends Controller
      */
     public function show(int $id): View
     {
-        $company = $this->companyRepository->findById($id);
-
-        return view('companies.show', compact('company'));
+        try {
+            $company = $this->companyRepository->findById($id);
+            return view('companies.show', compact('company'));
+        } catch (Throwable $exception) {
+            abort(404, 'Company not found.');
+        }
     }
 
     /**
@@ -96,9 +103,12 @@ class CompanyController extends Controller
      */
     public function edit(int $id): View
     {
-        $company = $this->companyRepository->findById($id);
-
-        return view('Companies.Edit', compact('company'));
+        try {
+            $company = $this->companyRepository->findById($id);
+            return view('companies.edit', compact('company'));
+        } catch (Throwable $exception) {
+            abort(404, 'Company not found.');
+        }
     }
 
     /**

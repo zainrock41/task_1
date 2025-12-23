@@ -26,7 +26,7 @@ class EmployeeDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn() // Adds DT_RowIndex column
-            ->addColumn('company_name', function (Employee $employee) {
+            ->addColumn('companyName', function (Employee $employee) {
                 return $employee->company?->name ?? '-';
             })
             ->addColumn('action', function (Employee $employee) {
@@ -83,7 +83,7 @@ class EmployeeDataTable extends DataTable
             Column::make('lastName')->title('Last Name'),
             Column::make('email')->title('Email'),
             Column::make('phone')->title('Phone'),
-            Column::computed('company_name')->title('Company'),
+            Column::computed('companyName')->title('Company'),
             Column::computed('action')->orderable(false)->searchable(false),
         ];
     }

@@ -20,7 +20,6 @@ class EmployeeRepository implements EmployeeInterface
         try {
             return Employee::with('company')->get();
         } catch (Throwable $exception) {
-            Log::error('Employee getAll failed', ['message' => $exception->getMessage()]);
             return collect(); // return empty collection on failure
         }
     }
@@ -61,7 +60,6 @@ class EmployeeRepository implements EmployeeInterface
         try {
             return Employee::with('company')->findOrFail($id);
         } catch (Throwable $exception) {
-            \Log::error('Employee findById failed', ['id' => $id, 'error' => $exception->getMessage()]);
             throw $exception;
         }
     }

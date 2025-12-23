@@ -20,7 +20,6 @@ class CompanyRepository implements CompanyInterface
         try {
             return Company::all();
         } catch (Throwable $exception) {
-            Log::error('Company getAll failed', ['message' => $exception->getMessage()]);
             return collect(); // return empty collection on failure
         }
     }
@@ -61,7 +60,6 @@ class CompanyRepository implements CompanyInterface
         try {
             return Company::findOrFail($id);
         } catch (Throwable $exception) {
-            \Log::error('Company findById failed', ['id' => $id, 'error' => $exception->getMessage()]);
             throw $exception;
         }
     }

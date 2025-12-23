@@ -8,9 +8,6 @@ use App\Models\Company;
 use App\Repositories\Interfaces\EmployeeInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
-use App\Models\Employee;
-use Yajra\DataTables\Facades\DataTables;
 use Throwable;
 
 class EmployeeController extends Controller
@@ -38,22 +35,13 @@ class EmployeeController extends Controller
      * @param EmployeeDataTable $dataTable
      * @return View
      */
-    public function index(EmployeeDataTable $dataTable)
+    public function index(EmployeeDataTable $dataTable): View
     {
-        return $dataTable->render('employees.index');
-    }
-
-    /**
-    * Display the specified employee.
-    *
-    * @param int $id
-    * @return View
-    */
-    public function show(int $id): View
-    {
-        $employee = $this->employeeRepository->findById($id);
-
-        return view('employees.show', compact('employee'));
+        try {
+            return $dataTable->render('employees.index');
+        } catch (Throwable $exception) {
+            abort(500, 'Unable to load employees list.');
+        }
     }
 
     /**
@@ -63,9 +51,12 @@ class EmployeeController extends Controller
      */
     public function create(): View
     {
-        $companies = Company::select('id', 'name')->get();
-
-        return view('Employees.Create', compact('companies'));
+        try {
+            $companies = Company::select('id', 'name')->get();
+            return view('employees.create', compact('companies'));
+        } catch (Throwable $exception) {
+            abort(500, 'Unable to load employee creation form.');
+        }
     }
 
     /**
@@ -91,6 +82,22 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Display the specified employee.
+     *
+     * @param int $id
+     * @return View
+     */
+    public function show(int $id): View
+    {
+        try {
+            $employee = $this->employeeRepository->findById($id);
+            return view('employees.show', compact('employee'));
+        } catch (Throwable $exception) {
+            abort(404, 'Employee not found.');
+        }
+    }
+
+    /**
      * Show the form for editing the specified employee.
      *
      * @param int $id
@@ -98,10 +105,13 @@ class EmployeeController extends Controller
      */
     public function edit(int $id): View
     {
-        $employee = $this->employeeRepository->findById($id);
-        $companies = Company::select('id', 'name')->get();
-
-        return view('Employees.Edit', compact('employee', 'companies'));
+        try {
+            $employee = $this->employeeRepository->findById($id);
+            $companies = Company::select('id', 'name')->get();
+            return view('employees.edit', compact('employee', 'companies'));
+        } catch (Throwable $exception) {
+            abort(404, 'Employee not found.');
+        }
     }
 
     /**
