@@ -13,11 +13,9 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Optional: Custom CSS -->
-    <style>
-        body { padding: 20px; }
-        .dataTables_wrapper .dataTables_filter input { margin-left: 0.5em; }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/action-buttons.css') }}">
+
 </head>
 <body>
 
@@ -49,10 +47,7 @@
 
     <!-- jQuery Validation -->
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <!-- Custom JS -->
     <script src="{{ asset('js/employee.js') }}"></script>
     <script src="{{ asset('js/company.js') }}"></script>

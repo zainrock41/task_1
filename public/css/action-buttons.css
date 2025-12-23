@@ -1,0 +1,9 @@
+.action-buttons {
+    display: flex;
+    gap: 0.25rem; /* same as gap-1 */
+}
+
+.action-buttons .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}

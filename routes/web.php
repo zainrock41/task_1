@@ -9,33 +9,71 @@ use App\Http\Controllers\EmployeeController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Companies & Employees CRUD routes with proper naming for DataTables
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
 |
 */
 
-// Home redirect (optional)
+// Home redirect
 Route::get('/', function () {
     return redirect()->route('companies.index');
 });
 
-// -------------------- Companies --------------------
+/*
+|--------------------------------------------------------------------------
+| Companies Routes
+|--------------------------------------------------------------------------
+*/
 Route::prefix('companies')->group(function () {
-    Route::get('/', [CompanyController::class, 'index'])->name('companies.index');
-    Route::get('/create', [CompanyController::class, 'create'])->name('companies.create');
-    Route::post('/', [CompanyController::class, 'store'])->name('companies.store');
-    Route::get('/{company}/edit', [CompanyController::class, 'edit'])->name('companies.edit');
-    Route::put('/{company}', [CompanyController::class, 'update'])->name('companies.update');
-    Route::delete('/{company}', [CompanyController::class, 'destroy'])->name('companies.destroy');
-    Route::get('/{company}', [CompanyController::class, 'show'])->name('companies.show');
+
+    Route::get('/', [CompanyController::class, 'index'])
+        ->name('companies.index');
+
+    Route::get('/create', [CompanyController::class, 'create'])
+        ->name('companies.create');
+
+    Route::post('/', [CompanyController::class, 'store'])
+        ->name('companies.store');
+
+    Route::get('/{companyId}', [CompanyController::class, 'show'])
+        ->name('companies.show');
+
+    Route::get('/{companyId}/edit', [CompanyController::class, 'edit'])
+        ->name('companies.edit');
+
+    Route::put('/{companyId}', [CompanyController::class, 'update'])
+        ->name('companies.update');
+
+    Route::delete('/{companyId}', [CompanyController::class, 'destroy'])
+        ->name('companies.destroy');
 });
 
-// -------------------- Employees --------------------
+/*
+|--------------------------------------------------------------------------
+| Employees Routes
+|--------------------------------------------------------------------------
+*/
 Route::prefix('employees')->group(function () {
-    Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
-    Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
-    Route::post('/', [EmployeeController::class, 'store'])->name('employees.store');
-    Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-    Route::put('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
-    Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-    Route::get('/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
+
+    Route::get('/', [EmployeeController::class, 'index'])
+        ->name('employees.index');
+
+    Route::get('/create', [EmployeeController::class, 'create'])
+        ->name('employees.create');
+
+    Route::post('/', [EmployeeController::class, 'store'])
+        ->name('employees.store');
+
+    Route::get('/{employeeId}', [EmployeeController::class, 'show'])
+        ->name('employees.show');
+
+    Route::get('/{employeeId}/edit', [EmployeeController::class, 'edit'])
+        ->name('employees.edit');
+
+    Route::put('/{employeeId}', [EmployeeController::class, 'update'])
+        ->name('employees.update');
+
+    Route::delete('/{employeeId}', [EmployeeController::class, 'destroy'])
+        ->name('employees.destroy');
 });

@@ -3,12 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Employee;
-use App\Repositories\Interfaces\EmployeeRepositoryInterface;
+use App\Repositories\Interfaces\EmployeeInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class EmployeeRepository implements EmployeeRepositoryInterface
+class EmployeeRepository implements EmployeeInterface
 {
     /**
      * Get all employees.
@@ -17,7 +17,12 @@ class EmployeeRepository implements EmployeeRepositoryInterface
      */
     public function getAll(): Collection
     {
-        return Employee::with('company')->get();
+        try {
+            return Employee::with('company')->get();
+        } catch (Throwable $exception) {
+            Log::error('Employee getAll failed', ['message' => $exception->getMessage()]);
+            return collect(); // return empty collection on failure
+        }
     }
 
     /**
@@ -45,14 +50,20 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     }
 
     /**
-     * Find employee by id.
-     *
-     * @param int $id
-     * @return Employee
-     */
+    * Find an employee by its ID.
+    *
+    * @param int $id The ID of the employee to retrieve.
+    * @return \App\Models\Employee The employee model instance.
+    *
+    */
     public function findById(int $id): Employee
     {
-        return Employee::with('company')->findOrFail($id);
+        try {
+            return Employee::with('company')->findOrFail($id);
+        } catch (Throwable $exception) {
+            \Log::error('Employee findById failed', ['id' => $id, 'error' => $exception->getMessage()]);
+            throw $exception;
+        }
     }
 
     /**

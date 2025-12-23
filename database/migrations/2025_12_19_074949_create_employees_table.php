@@ -20,7 +20,8 @@ return new class extends Migration
                   ->cascadeOnDelete();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->timestamps();
+            $table->unsignedInteger('createdAt');
+            $table->unsignedInteger('updatedAt');
         });
     }
 

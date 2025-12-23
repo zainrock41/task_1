@@ -14,10 +14,15 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        Company::create([
-            'name'    => 'TechSwivel Company',
-            'email'   => 'Company@techswivel.com',
-            'website' => 'https://TechSwivel.com',
-        ]);
+        $email = 'company@techswivel.com';
+
+        // Check if company already exists by email
+        if (!Company::where('email', $email)->exists()) {
+            Company::create([
+                'name'    => 'TechSwivel Company',
+                'email'   => $email,
+                'website' => 'https://techswivel.com',
+            ]);
+        }
     }
 }

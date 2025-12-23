@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\EmployeeDataTable;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Company;
-use App\Repositories\Interfaces\EmployeeRepositoryInterface;
+use App\Repositories\Interfaces\EmployeeInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -18,16 +18,16 @@ class EmployeeController extends Controller
     /**
      * Employee repository instance.
      *
-     * @var EmployeeRepositoryInterface
+     * @var EmployeeInterface
      */
-    protected EmployeeRepositoryInterface $employeeRepository;
+    protected EmployeeInterface $employeeRepository;
 
     /**
-     * Inject EmployeeRepositoryInterface.
+     * Inject EmployeeInterface.
      *
-     * @param EmployeeRepositoryInterface $employeeRepository
+     * @param EmployeeInterface $employeeRepository
      */
-    public function __construct(EmployeeRepositoryInterface $employeeRepository)
+    public function __construct(EmployeeInterface $employeeRepository)
     {
         $this->employeeRepository = $employeeRepository;
     }
@@ -38,19 +38,9 @@ class EmployeeController extends Controller
      * @param EmployeeDataTable $dataTable
      * @return View
      */
-    public function index(Request $request)
+    public function index(EmployeeDataTable $dataTable)
     {
-        if (request()->ajax()) {
-            $query = Employee::with('company')->select('employees.*');
-
-            return DataTables::of($query)
-                ->addColumn('company_name', fn($employee) => $employee->company?->name)
-                ->addColumn('action', fn($employee) => view('employees.partials.actions', compact('employee')))
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
-        return view('employees.index');
+        return $dataTable->render('employees.index');
     }
 
     /**

@@ -5,22 +5,22 @@ $(document).ready(function () {
     // =============================
     $("#EmployeeCreateForm, #EmployeeEditForm").validate({
         rules: {
-            first_name: { required: true, maxlength: 255 },
-            last_name: { required: true, maxlength: 255 },
-            company_id: { required: true },
+            firstName: { required: true, maxlength: 255 },
+            lastName: { required: true, maxlength: 255 },
+            companyId: { required: true },
             email: { email: true, maxlength: 255 },
             phone: { maxlength: 20 }
         },
         messages: {
-            first_name: {
+            firstName: {
                 required: "First name is required.",
                 maxlength: "First name cannot exceed 255 characters."
             },
-            last_name: {
+            lastName: {
                 required: "Last name is required.",
                 maxlength: "Last name cannot exceed 255 characters."
             },
-            company_id: {
+            companyId: {
                 required: "Please select a company."
             },
             email: {
@@ -40,29 +40,7 @@ $(document).ready(function () {
             $(element).removeClass("is-invalid");
         }
     });
-
-    // =============================
-    // SWEETALERT DELETE
-    // =============================
-    $(document).on('submit', '.delete-form', function (e) {
-        e.preventDefault();
-        let form = this;
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
-    });
-
+    
     // =============================
     // AUTO HIDE ALERT
     // =============================

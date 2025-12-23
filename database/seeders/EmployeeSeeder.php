@@ -14,20 +14,27 @@ class EmployeeSeeder extends Seeder
      */
     public function run(): void
     {
-        Employee::create([
-            'firstName' => 'Muhammad',
-            'lastName'  => 'Zain',
-            'companyId' => 1,
-            'email'     => 'Zain@techswivel.com',
-            'phone'     => '03001234567',
-        ]);
+        $employees = [
+            [
+                'firstName' => 'Muhammad',
+                'lastName'  => 'Zain',
+                'companyId' => 1,
+                'email'     => 'zain@techswivel.com',
+                'phone'     => '03001234567',
+            ],
+            [
+                'firstName' => 'Ali',
+                'lastName'  => 'Raza',
+                'companyId' => 1,
+                'email'     => 'aliraza@techswivel.com',
+                'phone'     => '03007654321',
+            ],
+        ];
 
-        Employee::create([
-            'firstName' => 'Ali',
-            'lastName'  => 'Raza',
-            'companyId' => 1,
-            'email'     => 'AliRaza@techswivel.com',
-            'phone'     => '03007654321',
-        ]);
+        foreach ($employees as $employee) {
+            if (!Employee::where('email', $employee['email'])->exists()) {
+                Employee::create($employee);
+            }
+        }
     }
 }

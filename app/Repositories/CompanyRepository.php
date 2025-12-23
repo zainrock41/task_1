@@ -3,12 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Company;
-use App\Repositories\Interfaces\CompanyRepositoryInterface;
+use App\Repositories\Interfaces\CompanyInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class CompanyRepository implements CompanyRepositoryInterface
+class CompanyRepository implements CompanyInterface
 {
     /**
      * Get all companies.
@@ -17,7 +17,12 @@ class CompanyRepository implements CompanyRepositoryInterface
      */
     public function getAll(): Collection
     {
-        return Company::all();
+        try {
+            return Company::all();
+        } catch (Throwable $exception) {
+            Log::error('Company getAll failed', ['message' => $exception->getMessage()]);
+            return collect(); // return empty collection on failure
+        }
     }
 
     /**
@@ -45,14 +50,20 @@ class CompanyRepository implements CompanyRepositoryInterface
     }
 
     /**
-     * Find company by id.
-     *
-     * @param int $id
-     * @return Company
-     */
+    * Find a company by its ID.
+    *
+    * @param int $id The ID of the company to retrieve.
+    * @return \App\Models\Company The company model instance.
+    *
+    */
     public function findById(int $id): Company
     {
-        return Company::findOrFail($id);
+        try {
+            return Company::findOrFail($id);
+        } catch (Throwable $exception) {
+            \Log::error('Company findById failed', ['id' => $id, 'error' => $exception->getMessage()]);
+            throw $exception;
+        }
     }
 
     /**

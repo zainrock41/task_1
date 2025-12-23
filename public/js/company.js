@@ -34,28 +34,6 @@ $(document).ready(function () {
     });
 
     // =============================
-    // SWEETALERT DELETE
-    // =============================
-    $(document).on('submit', '.delete-form', function (e) {
-        e.preventDefault();
-        let form = this;
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
-    });
-
-    // =============================
     // AUTO HIDE ALERT
     // =============================
     setTimeout(() => {

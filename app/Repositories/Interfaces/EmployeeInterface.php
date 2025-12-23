@@ -2,45 +2,45 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Models\Company;
+use App\Models\Employee;
 use Illuminate\Support\Collection;
 
-interface CompanyRepositoryInterface
+interface EmployeeInterface
 {
     /**
-     * Get all companies.
+     * Get all employees.
      *
      * @return Collection
      */
     public function getAll(): Collection;
 
     /**
-     * Store company data.
+     * Store employee data.
      *
      * @param array $data
-     * @return Company
+     * @return Employee
      */
-    public function store(array $data): Company;
+    public function store(array $data): Employee;
 
     /**
-     * Find company by id.
+     * Find employee by id.
      *
      * @param int $id
-     * @return Company
+     * @return Employee
      */
-    public function findById(int $id): Company;
+    public function findById(int $id): Employee;
 
     /**
-     * Update company data.
+     * Update employee data.
      *
      * @param int $id
      * @param array $data
-     * @return Company
+     * @return Employee
      */
-    public function update(int $id, array $data): Company;
+    public function update(int $id, array $data): Employee;
 
     /**
-     * Delete company.
+     * Delete employee.
      *
      * @param int $id
      * @return bool

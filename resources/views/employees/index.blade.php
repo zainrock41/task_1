@@ -8,38 +8,16 @@
         <a href="{{ route('employees.create') }}" class="btn btn-primary">Create Employee</a>
     </div>
 
-    <table class="table table-bordered" id="EmployeeTable">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Company</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-    </table>
+    {{-- Render table automatically --}}
+    {!! $dataTable->table(['class' => 'table table-bordered table-striped']) !!}
 @endsection
 
 @section('scripts')
-<script>
-$(document).ready(function() {
-    $('#EmployeeTable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('employees.index') }}",
-        columns: [
-            { data: 'firstName', name: 'firstName' },
-            { data: 'lastName', name: 'lastName' },
-            { data: 'company_name', name: 'company.name' },
-            { data: 'email', name: 'email' },
-            { data: 'phone', name: 'phone' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
-        ]
-    });
-});
+    {!! $dataTable->scripts() !!}
+@endsection
+
+@section('scripts')
 </script>
-<!-- Employee JS (validation + delete SweetAlert) -->
+<!-- Employee JS (validation) -->
 <script src="{{ asset('js/employee.js') }}"></script>
 @endsection

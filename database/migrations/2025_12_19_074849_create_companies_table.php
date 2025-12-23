@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('website')->nullable();
-            $table->timestamps();
+            $table->unsignedInteger('createdAt');
+            $table->unsignedInteger('updatedAt');
         });
     }
 

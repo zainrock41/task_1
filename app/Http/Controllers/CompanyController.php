@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\CompanyDataTable;
 use App\Http\Requests\CompanyRequest;
 use App\Models\Company;
-use App\Repositories\Interfaces\CompanyRepositoryInterface;
+use App\Repositories\Interfaces\CompanyInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -18,16 +18,16 @@ class CompanyController extends Controller
     /**
      * Company repository instance.
      *
-     * @var CompanyRepositoryInterface
+     * @var CompanyInterface
      */
-    protected CompanyRepositoryInterface $companyRepository;
+    protected CompanyInterface $companyRepository;
 
     /**
-     * Inject CompanyRepositoryInterface.
+     * Inject CompanyInterface.
      *
-     * @param CompanyRepositoryInterface $companyRepository
+     * @param CompanyInterface $companyRepository
      */
-    public function __construct(CompanyRepositoryInterface $companyRepository)
+    public function __construct(CompanyInterface $companyRepository)
     {
         $this->companyRepository = $companyRepository;
     }
@@ -38,20 +38,9 @@ class CompanyController extends Controller
      * @param CompanyDataTable $dataTable
      * @return View
      */
-    public function index(Request $request)
+    public function index(CompanyDataTable $dataTable)
     {
-        if ($request->ajax()) {
-            $query = Company::select('companies.*');
-
-            return DataTables::of($query)
-                ->addIndexColumn()
-                ->addColumn('action', function ($company) {
-                    return view('companies.partials.actions', compact('company'));
-             })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view('companies.index');
+        return $dataTable->render('companies.index');
     }
 
     /**
@@ -96,7 +85,7 @@ class CompanyController extends Controller
     {
         $company = $this->companyRepository->findById($id);
 
-        return view('Companies.Show', compact('company'));
+        return view('companies.show', compact('company'));
     }
 
     /**

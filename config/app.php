@@ -46,7 +46,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application URL
+    | Application URsL
     |--------------------------------------------------------------------------
     |
     | This URL is used by the console to properly generate URLs when using
