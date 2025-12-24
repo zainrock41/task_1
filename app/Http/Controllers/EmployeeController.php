@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\EmployeeDataTable;
 use App\Http\Requests\EmployeeRequest;
+use App\Http\Requests\EmployeeIdRequest;
 use App\Models\Company;
 use App\Repositories\Interfaces\EmployeeInterface;
 use Illuminate\Http\RedirectResponse;
@@ -33,29 +34,33 @@ class EmployeeController extends Controller
      * Display a listing of employees.
      *
      * @param EmployeeDataTable $dataTable
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function index(EmployeeDataTable $dataTable): View
+    public function index(EmployeeDataTable $dataTable)
     {
         try {
             return $dataTable->render('employees.index');
         } catch (Throwable $exception) {
-            abort(500, 'Unable to load employees list.');
+            return redirect()
+                ->back()
+                ->with('error', 'Unable to load employees list.');
         }
     }
 
     /**
      * Show the form for creating a new employee.
      *
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function create(): View
+    public function create()
     {
         try {
             $companies = Company::select('id', 'name')->get();
             return view('employees.create', compact('companies'));
         } catch (Throwable $exception) {
-            abort(500, 'Unable to load employee creation form.');
+            return redirect()
+                ->back()
+                ->with('error', 'Unable to load employee creation form.');
         }
     }
 
@@ -77,40 +82,45 @@ class EmployeeController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Something went wrong.');
+                ->with('error', 'Something went wrong while creating the employee.');
         }
     }
 
     /**
      * Display the specified employee.
      *
-     * @param int $id
-     * @return View
+     * @param EmployeeIdRequest $request
+     * @return View|RedirectResponse
      */
-    public function show(int $id): View
+    public function show(EmployeeIdRequest $request)
     {
         try {
-            $employee = $this->employeeRepository->findById($id);
+            $employee = $this->employeeRepository->findById($request->employeeId);
             return view('employees.show', compact('employee'));
         } catch (Throwable $exception) {
-            abort(404, 'Employee not found.');
+            return redirect()
+                ->route('employees.index')
+                ->with('error', 'Unable to load employee details.');
         }
     }
 
     /**
      * Show the form for editing the specified employee.
      *
-     * @param int $id
-     * @return View
+     * @param EmployeeIdRequest $request
+     * @return View|RedirectResponse
      */
-    public function edit(int $id): View
+    public function edit(EmployeeIdRequest $request)
     {
         try {
-            $employee = $this->employeeRepository->findById($id);
+            $employee = $this->employeeRepository->findById($request->employeeId);
             $companies = Company::select('id', 'name')->get();
+
             return view('employees.edit', compact('employee', 'companies'));
         } catch (Throwable $exception) {
-            abort(404, 'Employee not found.');
+            return redirect()
+                ->route('employees.index')
+                ->with('error', 'Unable to load employee edit form.');
         }
     }
 
@@ -118,13 +128,13 @@ class EmployeeController extends Controller
      * Update the specified employee in storage.
      *
      * @param EmployeeRequest $request
-     * @param int $id
+     * @param EmployeeIdRequest $idRequest
      * @return RedirectResponse
      */
-    public function update(EmployeeRequest $request, int $id): RedirectResponse
+    public function update(EmployeeRequest $request, EmployeeIdRequest $idRequest): RedirectResponse
     {
         try {
-            $this->employeeRepository->update($id, $request->validated());
+            $this->employeeRepository->update($idRequest->employeeId, $request->validated());
 
             return redirect()
                 ->route('employees.index')
@@ -133,20 +143,20 @@ class EmployeeController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Something went wrong.');
+                ->with('error', 'Something went wrong while updating the employee.');
         }
     }
 
     /**
      * Remove the specified employee from storage.
      *
-     * @param int $id
+     * @param EmployeeIdRequest $request
      * @return RedirectResponse
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(EmployeeIdRequest $request): RedirectResponse
     {
         try {
-            $this->employeeRepository->delete($id);
+            $this->employeeRepository->delete($request->employeeId);
 
             return redirect()
                 ->route('employees.index')
@@ -154,7 +164,7 @@ class EmployeeController extends Controller
         } catch (Throwable $exception) {
             return redirect()
                 ->back()
-                ->with('error', 'Something went wrong.');
+                ->with('error', 'Something went wrong while deleting the employee.');
         }
     }
 }

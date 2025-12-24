@@ -20,7 +20,7 @@ class EmployeeRepository implements EmployeeInterface
         try {
             return Employee::with('company')->get();
         } catch (Throwable $exception) {
-            return collect(); // return empty collection on failure
+            throw $exception;
         }
     }
 

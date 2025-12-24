@@ -49,7 +49,7 @@ class CompanyDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('CompanyTable')
+            ->setTableId('companyTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(1); // Default order by 'name'

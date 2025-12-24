@@ -20,7 +20,7 @@ class CompanyRepository implements CompanyInterface
         try {
             return Company::all();
         } catch (Throwable $exception) {
-            return collect(); // return empty collection on failure
+            throw $exception;
         }
     }
 

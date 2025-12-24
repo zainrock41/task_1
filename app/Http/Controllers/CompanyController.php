@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\CompanyDataTable;
 use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\CompanyIdRequest;
 use App\Repositories\Interfaces\CompanyInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -32,28 +33,32 @@ class CompanyController extends Controller
      * Display a listing of companies.
      *
      * @param CompanyDataTable $dataTable
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function index(CompanyDataTable $dataTable): View
+    public function index(CompanyDataTable $dataTable)
     {
         try {
             return $dataTable->render('companies.index');
         } catch (Throwable $exception) {
-            abort(500, 'Unable to load companies list.');
+            return redirect()
+                ->back()
+                ->with('error', 'Unable to load companies list.');
         }
     }
 
     /**
      * Show the form for creating a new company.
      *
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function create(): View
+    public function create()
     {
         try {
             return view('companies.create');
         } catch (Throwable $exception) {
-            abort(500, 'Unable to load company creation form.');
+            return redirect()
+                ->back()
+                ->with('error', 'Unable to load company creation form.');
         }
     }
 
@@ -75,53 +80,69 @@ class CompanyController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Something went wrong.');
+                ->with('error', 'Something went wrong while creating the company.');
         }
     }
 
     /**
      * Display the specified company.
      *
-     * @param int $id
-     * @return View
+     * @param CompanyIdRequest $request
+     * @return View|RedirectResponse
      */
-    public function show(int $id): View
+    public function show(CompanyIdRequest $request)
     {
         try {
-            $company = $this->companyRepository->findById($id);
+            $company = $this->companyRepository->findById($request->companyId);
+            if (!$company) {
+                return redirect()->route('companies.index')
+                    ->with('error', 'Company not found.');
+            }
+
             return view('companies.show', compact('company'));
         } catch (Throwable $exception) {
-            abort(404, 'Company not found.');
+            return redirect()
+                ->route('companies.index')
+                ->with('error', 'Unable to load company details.');
         }
     }
 
     /**
      * Show the form for editing the specified company.
      *
-     * @param int $id
-     * @return View
+     * @param CompanyIdRequest $request
+     * @return View|RedirectResponse
      */
-    public function edit(int $id): View
-    {
-        try {
-            $company = $this->companyRepository->findById($id);
-            return view('companies.edit', compact('company'));
-        } catch (Throwable $exception) {
-            abort(404, 'Company not found.');
+    public function edit(CompanyIdRequest $request)
+{
+    try {
+        $companyId = $request->companyId; // matches route param & validation
+        $company = $this->companyRepository->findById($companyId);
+
+        if (!$company) {
+            return redirect()->route('companies.index')
+                ->with('error', 'Company not found.');
         }
+
+        return view('companies.edit', compact('company'));
+    } catch (Throwable $exception) {
+        return redirect()
+            ->route('companies.index')
+            ->with('error', 'Unable to load company edit form.');
     }
+}
 
     /**
      * Update the specified company in storage.
      *
      * @param CompanyRequest $request
-     * @param int $id
+     * @param CompanyIdRequest $idRequest
      * @return RedirectResponse
      */
-    public function update(CompanyRequest $request, int $id): RedirectResponse
+    public function update(CompanyRequest $request, CompanyIdRequest $idRequest): RedirectResponse
     {
         try {
-            $this->companyRepository->update($id, $request->validated());
+            $this->companyRepository->update($idRequest->companyId, $request->validated());
 
             return redirect()
                 ->route('companies.index')
@@ -130,20 +151,21 @@ class CompanyController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Something went wrong.');
+                ->with('error', 'Something went wrong while updating the company.');
         }
     }
 
     /**
      * Remove the specified company from storage.
      *
-     * @param int $id
+     *
+     * @param CompanyIdRequest $request
      * @return RedirectResponse
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(CompanyIdRequest $request): RedirectResponse
     {
         try {
-            $this->companyRepository->delete($id);
+            $this->companyRepository->delete($request->companyId);
 
             return redirect()
                 ->route('companies.index')
@@ -151,7 +173,7 @@ class CompanyController extends Controller
         } catch (Throwable $exception) {
             return redirect()
                 ->back()
-                ->with('error', 'Something went wrong.');
+                ->with('error', 'Something went wrong while deleting the company.');
         }
     }
 }

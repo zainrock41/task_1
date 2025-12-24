@@ -64,7 +64,7 @@ class EmployeeDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('EmployeeTable')
+            ->setTableId('employeeTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(1); // Default ordering by first column (First Name)
