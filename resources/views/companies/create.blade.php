@@ -8,7 +8,7 @@
     <form id="CompanyCreateForm" action="{{ route('companies.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="name">Company___Name</label>
+            <label for="name">Company Name</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
         </div>
         <div class="mb-3">
